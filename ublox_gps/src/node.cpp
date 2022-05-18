@@ -173,7 +173,7 @@ void UbloxNode::getRosParams() {
   // PPP: Advanced Setting
   nh->param("enable_ppp", enable_ppp_, false);
   // SBAS params, only for some devices
-  nh->param("sbas", enable_sbas_, false);
+  nh->param("gnss/sbas", enable_sbas_, false);
   getRosUint("sbas/max", max_sbas_, 0); // Maximum number of SBAS channels
   getRosUint("sbas/usage", sbas_usage_, 0);
   nh->param("dynamic_model", dynamic_model_, std::string("portable"));

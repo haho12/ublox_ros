@@ -363,7 +363,8 @@ For debugging messages set the debug parameter to > 0. The range for debug is 0-
 ## Troubleshooting
 
 1. Why can't the ublox_gps node open my device, even though I have correctly specified the path in `/dev`? 
-* Make sure you are the owner of the device, or a member of `dialout` group.
+* Make sure you are the owner of the device, or a member of `dialout` group. 
+  `sudo usermod -a -G dialout $USER`
 
 # Links
 Consult the [official protocol spec](https://www.u-blox.com/sites/default/files/products/documents/u-blox8-M8_ReceiverDescrProtSpec_(UBX-13003221)_Public.pdf) for details on packets supported by u-blox devices.

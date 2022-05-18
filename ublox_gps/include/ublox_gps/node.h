@@ -815,10 +815,22 @@ class UbloxFirmware7Plus : public UbloxFirmware {
     fix.altitude = m.height * 1e-3; // to [m]
     // Set the Fix status
     bool fixOk = m.flags & m.FLAGS_GNSS_FIX_OK;
-    if (fixOk && m.fixType >= m.FIX_TYPE_2D) {
+    bool fixTypeOk = m.fixType == m.FIX_TYPE_2D
+                  || m.fixType == m.FIX_TYPE_3D
+                  || m.fixType == m.FIX_TYPE_GNSS_DEAD_RECKONING_COMBINED;
+    if (fixOk && fixTypeOk ) {
       fix.status.status = fix.status.STATUS_FIX;
-      if(m.flags & m.CARRIER_PHASE_FIXED)
-        fix.status.status = fix.status.STATUS_GBAS_FIX;
+      if(m.flags & m.FLAGS_DIFF_SOLN) {
+        fix.status.status = fix.status.STATUS_SBAS_FIX; // alternative check would be: use UBX-NAV-DGPS -> base station id == 0000 for satellite
+
+        assert(sizeof(m.reserved1) == 6); // Error: message defintion has changed, 'flags3' used to be part of 'reserved1'.
+        uint16_t flags3 = *(uint16_t*) &m.reserved1;
+
+        bool base_station_correction_data_age_available = flags3 > 0; // TODO: extract correct flags...
+        if(base_station_correction_data_age_available || (m.flags & m.CARRIER_PHASE_FIXED)) {
+          fix.status.status = fix.status.STATUS_GBAS_FIX;
+        }
+      }
     }
     else {
       fix.status.status = fix.status.STATUS_NO_FIX;

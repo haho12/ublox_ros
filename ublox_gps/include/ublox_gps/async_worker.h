@@ -264,8 +264,20 @@ void AsyncWorker<StreamT>::readEnd(const boost::system::error_code& error,
       std::ostringstream oss;
       for (std::vector<unsigned char>::iterator it =
                in_.begin() + in_buffer_size_ - bytes_transfered;
-           it != in_.begin() + in_buffer_size_; ++it)
+           it != in_.begin() + in_buffer_size_; ++it) {
         oss << boost::format("%02x") % static_cast<unsigned int>(*it) << " ";
+      }
+	  
+      if( bytes_transfered > 0 && pRawDataStart[0] == '$' ) {
+		// print NMEA string
+		oss << std::endl;
+        for (std::vector<unsigned char>::iterator it =
+                 in_.begin() + in_buffer_size_ - bytes_transfered;
+             it != in_.begin() + in_buffer_size_; ++it) {
+          oss << boost::format("%c") % static_cast<unsigned char>(*it);
+        }
+      }
+
       ROS_DEBUG("U-Blox received %li bytes \n%s", bytes_transfered,
                oss.str().c_str());
     }

@@ -124,14 +124,15 @@ void UbloxNode::addProductInterface(std::string product_category,
   else if (product_category.compare("TIM") == 0)
     components_.push_back(ComponentPtr(new TimProduct));
   else if (product_category.compare("ADR") == 0 ||
-           product_category.compare("UDR") == 0)
+           product_category.compare("UDR") == 0 ||
+           product_category.compare("LAP") == 0)
     components_.push_back(ComponentPtr(new AdrUdrProduct(protocol_version_)));
   else if (product_category.compare("FTS") == 0)
     components_.push_back(ComponentPtr(new FtsProduct));
   else if(product_category.compare("SPG") != 0)
     ROS_WARN("Product category %s %s from MonVER message not recognized %s",
              product_category.c_str(), ref_rov.c_str(),
-             "options are HPG REF, HPG ROV, HPG #.#, HDG #.#, TIM, ADR, UDR, FTS, SPG");
+             "options are HPG REF, HPG ROV, HPG #.#, HDG #.#, TIM, ADR, UDR, FTS, SPG, LAP");
 }
 
 void UbloxNode::getRosParams() {
@@ -1395,20 +1396,22 @@ void AdrUdrProduct::callbackEsfMEAS(const ublox_msgs::EsfMEAS &m) {
       imu_.linear_acceleration_covariance[0] = -1;
       imu_.angular_velocity_covariance[0] = -1;
 
-      if (data_type == 14) {
+      if (data_type == ublox_msgs::EsfMEAS::DATA_TYPE_GYRO_ANG_RATE_X) {
           imu_.angular_velocity.x = data_value * deg_per_sec;
-      } else if (data_type == 16) {
+      } else if (data_type == ublox_msgs::EsfMEAS::DATA_TYPE_ACCELEROMETER_X) {
           imu_.linear_acceleration.x = data_value * m_per_sec_sq;
-      } else if (data_type == 13) {
+      } else if (data_type == ublox_msgs::EsfMEAS::DATA_TYPE_GYRO_ANG_RATE_Y) {
           imu_.angular_velocity.y = data_value * deg_per_sec;
-      } else if (data_type == 17) {
+      } else if (data_type == ublox_msgs::EsfMEAS::DATA_TYPE_ACCELEROMETER_Y) {
           imu_.linear_acceleration.y = data_value * m_per_sec_sq;
-      } else if (data_type == 5) {
+      } else if (data_type == ublox_msgs::EsfMEAS::DATA_TYPE_Z_AXIS_GYRO) {
           imu_.angular_velocity.z = data_value * deg_per_sec;
-      } else if (data_type == 18) {
+      } else if (data_type == ublox_msgs::EsfMEAS::DATA_TYPE_ACCELEROMETER_Z) {
           imu_.linear_acceleration.z = data_value * m_per_sec_sq;
-      } else if (data_type == 12) {
+      } else if (data_type == ublox_msgs::EsfMEAS::DATA_TYPE_GYRO_TEMPERATURE) {
         //ROS_INFO("Temperature in celsius: %f", data_value * deg_c); 
+      } else if (data_type == ublox_msgs::EsfMEAS::DATA_TYPE_SINGLE_TICK) {
+        //ROS_INFO("Speed tick, see EsfMEAS.msg"); 
       } else {
         ROS_INFO("data_type: %u", data_type);
         ROS_INFO("data_value: %u", data_value);

@@ -192,6 +192,10 @@ UbloxNode::UbloxNode(const rclcpp::NodeOptions & options) : rclcpp::Node("ublox_
   initialize();
 }
 
+void UbloxNode::rtcmCallback(const rtcm_msgs::msg::Message::SharedPtr msg) {
+  gps_->sendRtcm(msg->message);
+}
+
 void UbloxNode::addFirmwareInterface() {
   int ublox_version;
   if (protocol_version_ < 14.0) {

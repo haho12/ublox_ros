@@ -17,15 +17,16 @@ find_package(asio REQUIRED)
 find_package(diagnostic_msgs REQUIRED)
 find_package(diagnostic_updater REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(nmea_msgs REQUIRED)
 find_package(rcl_interfaces REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(rtcm_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(ublox_msgs REQUIRED)
 find_package(ublox_serialization REQUIRED)
-
 include_directories(include)
 
 # build node
@@ -51,9 +52,11 @@ ament_target_dependencies(ublox_gps
   "diagnostic_msgs"
   "diagnostic_updater"
   "geometry_msgs"
+  "nmea_msgs"
   "rcl_interfaces"
   "rclcpp"
   "rclcpp_components"
+  "rtcm_msgs"
   "sensor_msgs"
   "std_msgs"
   "tf2"

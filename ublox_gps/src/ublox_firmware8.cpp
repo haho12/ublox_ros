@@ -124,8 +124,10 @@ void UbloxFirmware8::getRosParams() {
 
     std::vector<uint8_t> bds_talker_id;
     getRosUint(node_, "nmea.bds_talker_id", bds_talker_id);
-    cfg_nmea_.bds_talker_id[0] = bds_talker_id[0];
-    cfg_nmea_.bds_talker_id[1] = bds_talker_id[1];
+    if(bds_talker_id.size() >= 2) {
+        cfg_nmea_.bds_talker_id[0] = bds_talker_id[0];
+        cfg_nmea_.bds_talker_id[1] = bds_talker_id[1];
+    }
   }
 }
 

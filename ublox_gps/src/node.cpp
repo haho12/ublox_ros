@@ -386,6 +386,9 @@ void UbloxNode::getRosParams() {
 
   // NMEA parameters
   this->declare_parameter("nmea.set", false);
+  this->declare_parameter("nmea.version", 65); // NMEA_VERSION_4_1 = 65 --> NMEA Version 4.1
+  this->declare_parameter("nmea.num_sv", 8);
+  this->declare_parameter("nmea.sv_numbering", 1);
   this->declare_parameter("nmea.compat", false);
   this->declare_parameter("nmea.consider", false);
   this->declare_parameter("nmea.limit82", false);
@@ -603,7 +606,8 @@ void UbloxNode::subscribe() {
     gps_->subscribe<ublox_msgs::msg::AidHUI>([this](const ublox_msgs::msg::AidHUI &m) { aid_hui_pub_->publish(m); },
                                         1);
   }
-
+  
+  // NMEA messages
   if (getRosBoolean(this, "publish.nmea")) {
     gps_->subscribe_nmea([this](const std::string &sentence) {
       nmea_msgs::msg::Sentence m;

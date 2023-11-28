@@ -1,0 +1,86 @@
+# Configuration Settings for NEO-M8U device
+
+ublox_gps_node:
+  ros__parameters:
+    debug: 1                    # Range 0-4 (0 means no debug statements will print)
+
+    save:
+      mask: 3103                # Save I/O, Message, INF Message, Nav, Receiver
+                                # Manager, Antenna, and Logging Configuration
+      device: 4                 # Save to EEPROM
+
+    device: /dev/ttyACM0
+    frame_id: hshbot_gps
+    rate: 4.0                   # in Hz
+    nav_rate: 4                 # [# of measurement cycles], recommended 1 Hz, may
+                                # be either 5 Hz (Dual constellation) or
+                                # 8 Hz (GPS only)
+    dynamic_model: pedestrian   # 0: portable, <= 310 m/s, general purpose, low position accuracy
+                                # 2: stationary, 0 m/s
+                                # 3: pedestrian, <=  30 m/s
+                                # 4: automotive, <= 100 m/s
+                                # Airborne < 2G, 2D fix not supported (3D only),
+                                # Max Alt: 50km
+                                # Max Horizontal Velocity: 250 m/s,
+                                # Max Vertical Velocity: 100 m/s
+                                
+    fix_mode: auto              # 1: 2d, 2: 3d, 3: auto
+    enable_ppp: false
+    dr_limit: 1
+
+    uart1:
+      baudrate: 115200           # NEO-M8U specific
+      in: 16                     # RTCM 3
+      out: 16                    # No UART out for rover
+
+    gnss:
+      gps: true
+      glonass: false
+      beidou: false
+      qzss: false
+      sbas: true
+
+    sbas:
+      max: 2   # obsolete
+      usage: 7 # bit0: range, bit1: differential corrections, bit2: integrity
+
+    dgnss_mode: 3                # Fixed mode
+
+    inf:
+      all: true                  # Whether to display all INF messages in console
+
+    # Enable u-blox message publishers
+    publish:
+      all: true
+      esf: true
+      aid:
+        hui: false
+      nav:
+        posecef: false
+
+#nmea:
+#  set: true
+#  version: 65
+#  num_sv: 8
+#  sv_numbering: 1
+#  compat: true
+#  consider: true
+#  limit82: true
+#  high_prec: false
+#  filter:
+#    pos: true
+#    msk_pos: true
+#    time: true
+#    date: true
+#    gps_only: true
+#    track: true
+#  gnssToFilter:
+#    gps: false
+#    sbas: true
+#    qzss: true
+#    glonass: false
+#    beidou: true
+#  main_talker_id: 1
+#  gsv_talker_id: 1
+#  bds_talker_id: [0,0]
+
